@@ -1,0 +1,5 @@
+# data directory
+model/data
+
+# pycache
+__pycache__/
