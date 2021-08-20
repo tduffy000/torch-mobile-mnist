@@ -80,20 +80,25 @@ def evaluate(model, loader):
     
 def store_models(model):
     ts = int(time.time())
-    full_model_path = os.path.join(ARTIFACT_PATH, str(ts), 'full')
+    models_path = os.path.join(ARTIFACT_PATH, str(ts))
+    if not os.path.exists(models_path):
+        os.makedirs(models_path)
+    
+    full_model_path = os.path.join(models_path, 'full_model.pt')
     torch.save(model, full_model_path)
     model = torch.load(full_model_path)
     model.eval()
 
     quantized_model = torch.quantization.quantize_dynamic(
         model,
-        qcongif_spec={torch.nn.Linear},
+        qconfig_spec={torch.nn.Linear},
         dtype=torch.qint8
     )
     input = torch.zeros(1, 1, 28, 28)
     ts_model = torch.jit.trace(quantized_model, input)
     optim_model = optimize_for_mobile(ts_model)
-    optim_model.save(os.path.join(ARTIFACT_PATH, str(ts), 'mobile'))
+    optim_model_path = os.path.join(models_path, 'mobile_model.pt')
+    optim_model.save(optim_model_path)
 
 def run(args):
     
@@ -116,7 +121,7 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, help='The number of training epochs.')
     parser.add_argument('--lr', type=float, help='The learning rate.')
     parser.add_argument('--download_path', type=str, default=DEFAULT_TARGET_PATH)
-    parser.add_argument('--freeze', type=bool, default=False)
+    parser.add_argument('--freeze', default=False, action='store_true')
     args = parser.parse_args()
 
     run(args)
