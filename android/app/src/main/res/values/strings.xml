@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Torch MNIST</string>
+    <string name="canvasContentDescription">Torch MNIST predicts which digit you just drew</string>
+</resources>
