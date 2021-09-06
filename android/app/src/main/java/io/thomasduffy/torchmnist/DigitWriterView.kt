@@ -24,8 +24,11 @@ class DigitWriterView(ctx: Context): View(ctx) {
 
     private val touchTolerance = ViewConfiguration.get(ctx).scaledTouchSlop
 
-    private val bgColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
-    private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
+    private val bgColor = ResourcesCompat.getColor(resources, R.color.purple_200, null)
+    private val drawColor = ResourcesCompat.getColor(resources, R.color.black, null)
+
+    private var allPoints: MutableList<MutableList<Pair<Float, Float>>> = ArrayList()
+    private var pointSegment: MutableList<Pair<Float, Float>> = ArrayList()
 
     private val paint = Paint().apply {
         color = drawColor
@@ -54,6 +57,7 @@ class DigitWriterView(ctx: Context): View(ctx) {
         canvas.drawBitmap(extraBitmap, 0f, 0f, null)
     }
 
+    // finger presses down
     private fun touchStart() {
         path.reset()
         path.moveTo(motionTouchEventX, motionTouchEventY)
@@ -61,6 +65,7 @@ class DigitWriterView(ctx: Context): View(ctx) {
         currentY = motionTouchEventY
     }
 
+    // finger moves
     private fun touchMove() {
         val dx = Math.abs(motionTouchEventX - currentX)
         val dy = Math.abs(motionTouchEventY - currentY)
@@ -71,13 +76,28 @@ class DigitWriterView(ctx: Context): View(ctx) {
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
+            // add point to current segment being drawn
+            pointSegment.add(Pair(currentX, currentY))
+
             extraCanvas.drawPath(path, paint)
         }
         invalidate()
     }
 
+    // finger comes up
     private fun touchUp() {
+        // add the drawn segment to the set of drawn segments (allPoints)
+        allPoints.add(pointSegment)
+        pointSegment.clear()
         path.reset()
+    }
+
+    fun getPoints(): MutableList<MutableList<Pair<Float, Float>>> {
+        return allPoints
+    }
+
+    fun clearPoints() {
+        allPoints.clear()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
