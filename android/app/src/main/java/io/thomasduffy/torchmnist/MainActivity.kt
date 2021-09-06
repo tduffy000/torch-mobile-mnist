@@ -17,7 +17,11 @@ class MainActivity : AppCompatActivity() {
 //        val predictionView = findViewById<TextView>(R.id.prediction)
         val drawView = findViewById<DigitWriterView>(R.id.digitWriterView)
 //        val predictButton = findViewById<Button>(R.id.predictButton)
-//        val clearButton = findViewById<Button>(R.id.clearButton)
+
+        val clearButton = findViewById<Button>(R.id.clearButton)
+        clearButton.setOnClickListener {
+            drawView.clear()
+        }
 
     }
 }
