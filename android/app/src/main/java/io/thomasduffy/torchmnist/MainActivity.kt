@@ -3,25 +3,13 @@ package io.thomasduffy.torchmnist
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
-import org.pytorch.IValue
 import org.pytorch.Module
-import org.pytorch.PyTorchAndroid
 import org.pytorch.Tensor
-import java.io.File
-import java.util.*
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    val MNIST_MEAN = 0.3081
-    val MNIST_STD = 0.1307
-    val BLANK = - MNIST_STD / MNIST_MEAN
-    val FILLED = (1.0f - MNIST_STD) / MNIST_MEAN
-    val IMG_SIZE = 28
-//
-//    val path = "file:///android_asset/mobile_model.pt"
-//    val mModule = Module.load(path)
+    val path = FileHandler.assetFilePath(this,"mobile_model.pt")
+    val mModule = Module.load(path)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 //            // make digit prediction
 //            val points = drawView.getPoints()
 //            if (points.size > 0 ) {
-//                val tensor = convertToTensor(points, drawView.height, drawView.width)
+//                val tensor = TensorUtils.convertToTensor(points, drawView.height, drawView.width)
 //                val prediction = predict(tensor)
 //                // print prediction in text view
 //            }
@@ -49,27 +37,6 @@ class MainActivity : AppCompatActivity() {
             // clear the prediction text
         }
 
-    }
-
-    private fun convertToTensor(points: MutableList<MutableList<Pair<Float, Float>>>, h: Int, w: Int): Tensor {
-        val inputs = Array<Double>(IMG_SIZE * IMG_SIZE) {_ -> BLANK}
-        points.forEach {segment ->
-            segment.forEach {pair ->
-                val pX = pair.first.toInt()
-                val pY = pair.second.toInt()
-                if (pX < w && pY < h && pX > 0 && pY > 0) {
-                    val x = IMG_SIZE * pX / w
-                    val y = IMG_SIZE * pY / h
-                    val loc = y * IMG_SIZE + x
-                    inputs[loc] = FILLED
-                }
-            }
-        }
-
-        // convert to Tensor
-        val buf = Tensor.allocateFloatBuffer(IMG_SIZE * IMG_SIZE)
-        inputs.forEach { el -> buf.put(el.toFloat()) }
-        return Tensor.fromBlob(buf, longArrayOf(1, 1, 28, 28))
     }
 
 //    private fun predict(t: Tensor): Int {
