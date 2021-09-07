@@ -8,13 +8,13 @@ import org.pytorch.Tensor
 
 class MainActivity : AppCompatActivity() {
 
-    val path = FileHandler.assetFilePath(this,"mobile_model.pt")
-    val mModule = Module.load(path)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+
+        val path = FileHandler.assetFilePath(this,"mobile_model.pt")
+        val mModule = Module.load(path)
 
 //        val predictionView = findViewById<TextView>(R.id.prediction)
         val drawView = findViewById<DigitWriterView>(R.id.digitWriterView)
