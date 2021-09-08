@@ -59,6 +59,7 @@ class DigitWriterView(ctx: Context, attrs: AttributeSet): View(ctx, attrs) {
     // finger presses down
     private fun touchStart() {
         path.reset()
+        pointSegment.clear()
         path.moveTo(motionTouchEventX, motionTouchEventY)
         currentX = motionTouchEventX
         currentY = motionTouchEventY
@@ -87,7 +88,6 @@ class DigitWriterView(ctx: Context, attrs: AttributeSet): View(ctx, attrs) {
     private fun touchUp() {
         // add the drawn segment to the set of drawn segments (allPoints)
         allPoints.add(pointSegment)
-        pointSegment.clear()
         path.reset()
     }
 
