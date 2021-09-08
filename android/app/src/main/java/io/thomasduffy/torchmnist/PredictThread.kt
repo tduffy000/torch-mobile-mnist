@@ -15,11 +15,9 @@ class PredictThread(
     override fun run() {
         var prediction = -1
         val points = drawView.getPoints()
-        Log.d(javaClass.canonicalName, "points.size = " + points.size)
         if (points.size > 0) {
             val tensor = TensorUtils.convertToTensor(points, drawView.height, drawView.width)
             prediction = predict(tensor)
-            Log.d(javaClass.canonicalName, "pred = " + prediction)
         }
         predView.text = prediction.toString()
     }
