@@ -55,4 +55,4 @@
         app:layout_constraintStart_toStartOf="@+id/predictButton"
         app:layout_constraintTop_toBottomOf="@+id/digitWriterView" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>  
+</androidx.constraintlayout.widget.ConstraintLayout>

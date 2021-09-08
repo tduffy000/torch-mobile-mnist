@@ -28,7 +28,7 @@ class TensorUtils {
 
             // convert to Tensor
             val buf = Tensor.allocateFloatBuffer(IMG_SIZE * IMG_SIZE)
-            inputs.forEach { el -> buf.put(el.toFloat()) }
+            inputs.forEach { x -> buf.put(x) }
             return Tensor.fromBlob(buf, longArrayOf(1, 1, 28, 28))
         }
     }
