@@ -9,8 +9,10 @@
     <io.thomasduffy.torchmnist.DigitWriterView
         android:id="@+id/digitWriterView"
         android:layout_width="350dp"
-        android:layout_height="350dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="191dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/prediction"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,9 +42,17 @@
         app:layout_constraintRight_toRightOf="@+id/predictButton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.906" />
+
     <TextView
         android:id="@+id/prediction"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="143dp"
+        android:text="TextView"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/predictButton"
+        app:layout_constraintStart_toStartOf="@+id/predictButton"
+        app:layout_constraintTop_toBottomOf="@+id/digitWriterView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>  
