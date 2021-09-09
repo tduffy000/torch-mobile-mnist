@@ -1,5 +1,5 @@
 SRC_ROOT=./artifacts
-MODEL_DIR=$(ls ${SRC_ROOT} | sort)
+MODEL_DIR=$(ls ${SRC_ROOT} | sort -r | head -n 1)
 MODEL_ASSET=mobile_model.pt
 
 MODEL_SRC=$SRC_ROOT/$MODEL_DIR/$MODEL_ASSET
