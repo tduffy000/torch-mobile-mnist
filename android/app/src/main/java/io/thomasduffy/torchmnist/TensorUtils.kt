@@ -13,6 +13,7 @@ class TensorUtils {
 
         fun convertToTensor(points: MutableList<MutableList<Pair<Float, Float>>>, h: Int, w: Int): Tensor {
             val inputs = Array<Float>(IMG_SIZE * IMG_SIZE) {_ -> BLANK}
+
             points.forEach {segment ->
                 segment.forEach {pair ->
                     val pX = pair.first.toInt()
@@ -25,6 +26,12 @@ class TensorUtils {
                     }
                 }
             }
+            // for debugging
+            var locs = mutableListOf<Int>()
+            for (i in inputs.indices) {
+                if (inputs[i] == FILLED) locs.add(i)
+            }
+            Log.d(javaClass.canonicalName, "locs = " + buildString { append(locs) })
 
             // convert to Tensor
             val buf = Tensor.allocateFloatBuffer(IMG_SIZE * IMG_SIZE)

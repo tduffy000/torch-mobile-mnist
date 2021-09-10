@@ -23,8 +23,8 @@ class DigitWriterView(ctx: Context, attrs: AttributeSet): View(ctx, attrs) {
 
     private val touchTolerance = ViewConfiguration.get(ctx).scaledTouchSlop
 
-    private val bgColor = ResourcesCompat.getColor(resources, R.color.purple_200, null)
-    private val drawColor = ResourcesCompat.getColor(resources, R.color.black, null)
+    private val bgColor = ResourcesCompat.getColor(resources, R.color.black, null)
+    private val drawColor = ResourcesCompat.getColor(resources, R.color.teal_200, null)
 
     private var allPoints: MutableList<MutableList<Pair<Float, Float>>> = ArrayList()
     private var pointSegment: MutableList<Pair<Float, Float>> = ArrayList()

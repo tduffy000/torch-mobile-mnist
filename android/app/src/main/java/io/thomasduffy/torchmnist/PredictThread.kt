@@ -25,14 +25,11 @@ class PredictThread(
     private fun predict(t: Tensor): Int {
         val outputs = mModule.forward(IValue.from(t)).toTensor().dataAsFloatArray
 
-        val sum = outputs.reduce { acc, v -> acc + kotlin.math.exp(v) }
-        val pos = outputs.map { v -> kotlin.math.exp(v) / sum }
-
         var pred = -1
         var maxScore = - Float.MAX_VALUE
-        for (i in 0..outputs.size - 1) {
-            if (pos[i] > maxScore) {
-                maxScore = pos[i]
+        for (i in outputs.indices) {
+            if (outputs[i] > maxScore) {
+                maxScore = outputs[i]
                 pred = i
             }
         }
