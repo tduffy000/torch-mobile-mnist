@@ -1,4 +1,7 @@
 # PyTorch Mobile `mnist`
+This is a simple (and not super functional) example of writing an Application for Android to perform 
+hand-written digit prediction using the very popular MNIST dataset.
+<img title="screenshot" src="./images/3_prediction.png" height=350> 
 
 
 ## `model`
