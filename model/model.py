@@ -8,14 +8,15 @@ class MNISTModel(torch.nn.Module):
         super().__init__()
         n_classes = 10
         self.network = torch.nn.Sequential(
-            torch.nn.Conv2d(1, 16, 2, 1),
-            torch.nn.ReLU(),
-            torch.nn.Conv2d(16, 32, 3, 1),
-            torch.nn.ReLU(),
+            torch.nn.Conv2d(1, 32, 3, 1),
             torch.nn.MaxPool2d(2),
-            torch.nn.Dropout(0.3),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(32, 16, 5, 1),
+            torch.nn.MaxPool2d(2),
+            torch.nn.ReLU(),
+            torch.nn.Dropout2d(0.5),
             torch.nn.Flatten(),
-            torch.nn.Linear(4608, 128),
+            torch.nn.Linear(256, 128),
             torch.nn.ReLU(),
             torch.nn.Dropout(0.3),
             torch.nn.Linear(128, n_classes)
