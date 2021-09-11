@@ -18,6 +18,17 @@ This uses a rather simple, shallow, network with a frontend of 2-dimensional Con
 ## `android`
 This is the real meat & potatoes, given I've never done this. I followed along with [various](https://github.com/pytorch/android-demo-app/tree/master/ViT4MNIST) [examples](https://github.com/pytorch/android-demo-app/tree/master/PyTorchDemoApp) in the PyTorch Examples [android-demo-app repo](https://github.com/pytorch/android-demo-app).
 
+### Overview
+* [`android/app/src/main`](./android/app/src/main/)
+    * [`/assets/mobile_model.pt`](./android/app/src/main/assets/) The frozen PyTorch model to deploy.
+    * [`/res`](./android/app/src/main/res/) The set of XML files specifying the objects in the Android app.
+    * [`/java/io/thomasduffy/torchmnist`](./android/app/src/main/java/io/thomasduffy/torchmnist/)
+        * [`/MainActivity.kt`](./android/app/src/main/java/io/thomasduffy/torchmnist/MainActivity.kt) The main entrypoint to the Android app.
+        * [`/DigitWriterView.kt`](./android/app/src/main/java/io/thomasduffy/torchmnist/DigitWriterView.kt) The custom `View` to represent the drawing cell.
+        * [`/FileHandler.kt`](./android/app/src/main/java/io/thomasduffy/torchmnist/FileHandler.kt) The class responsible for loading the PyTorch model onto the proper `assets` path.
+        * [`/PredictThread.kt`](./android/app/src/main/java/io/thomasduffy/torchmnist/PredictThread.kt) The `Thread` extending class responsible for responding to clicks on the `PREDICT` button.
+        * [`/TensorUtils.kt`](./android/app/src/main/java/io/thomasduffy/torchmnist/TensorUtils.kt) The class responsible for turning the `points` representation from the drawing board to an input `Tensor`.
+
 ### Drawing
 
 In order to convert the drawn picture on the face of the screen, we need to provide a `Canvas` and a `Bitmap` in a `View`. To store the pixels the user draws on, we extend the `android.view.View` class and override the `onSizeChanged` (which is called on instantiation) and `onDraw` (which is called when it's rendered), 
@@ -91,6 +102,61 @@ class MainActivity : AppCompatActivity() {
 ```
 
 ### Model
+Our frozen PyTorch model gets on the device via a little trickery. This seems to me the thing PyTorch still needs to figure out a bit. We have to place it on the Android filesystem in the `assets`. In order to do that, on startup we have to copy the file into that location, which is where our `FileHander` comes in,
+```kotlin
+class FileHandler {
+
+    companion object FilePath {
+
+        // determine the size of this buffer
+        // based on the size of your serialized PyTorch model!
+        final private val MODEL_BYTE_SIZE = 8 * 1024
+
+        /**
+         * Get the file path on the device to the serialized model.
+         */
+        fun assetFilePath(ctx: Context, assetName: String): String? {
+            val f = File(ctx.filesDir, assetName)
+
+            if (f.exists() && f.length() > 0) return f.absolutePath
+            return try {
+                val inStream = ctx.assets.open(assetName)
+                val outStream = FileOutputStream(f)
+
+                val buf = ByteArray(MODEL_BYTE_SIZE)
+                var read = 0
+                while (read != -1) {
+                    read = inStream.read(buf)
+                    outStream.write(buf, 0, read)
+                }
+                outStream.flush()
+                f.absolutePath
+            } catch (e: IOException) {
+                null
+            } finally {
+                null
+            }
+        }
+    }
+
+}
+```
+
+This will allow us to load in the model Module in our `MainActivity.kt` and use it to make predictions,
+```kotlin
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+
+        val path = FileHandler.assetFilePath(this,"mobile_model.pt")
+        val mModule = Module.load(path)
+    }
+}
+```
 
 ### Resources
 - [Kotlin Training](https://developer.android.com/codelabs/advanced-android-kotlin-training-canvas?hl=en&continue=https%3A%2F%2Fcodelabs.developers.google.com%2F%3Fcat%3Dandroid#0)
