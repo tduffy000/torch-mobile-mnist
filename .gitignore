@@ -1,0 +1,8 @@
+# data directory
+model/data
+
+# pycache
+__pycache__/
+
+# jupyter notebook checkpoints
+.ipynb_checkpoints/
